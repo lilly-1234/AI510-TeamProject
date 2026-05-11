@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Customer Support Agent</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 750px; margin: 40px auto; background: #f7f7f7; }
+    .box { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    input { width: 78%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; }
+    button { padding: 12px 18px; border: none; border-radius: 6px; cursor: pointer; }
+    #output { margin-top: 20px; white-space: pre-wrap; background: #f0f0f0; padding: 12px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>AI Customer Support Agent</h2>
+    <p>Ask about order tracking, refund, delivery, payment, or account support.</p>
+    <input id="message" placeholder="Example: Where is my order?" />
+    <button onclick="sendMessage()">Send</button>
+    <div id="output"></div>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const message = document.getElementById("message").value;
+      const output = document.getElementById("output");
+      output.textContent = "Loading...";
+
+      const response = await fetch("http://127.0.0.1:5000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await response.json();
+      output.textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
