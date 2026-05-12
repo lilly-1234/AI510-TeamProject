@@ -1,0 +1,54 @@
+name: AI Customer Support Agent CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run preprocessing
+        run: |
+          python preprocessing/data_cleaning.py
+
+      - name: Train model
+        run: |
+          python train_model.py --data data/cleaned_customer_support_dataset.csv
+
+      - name: Start Flask app
+        run: |
+          nohup python app/app.py &
+
+      - name: Test health endpoint
+        run: |
+          sleep 5
+          curl http://127.0.0.1:5000/
+
+      - name: Test chat endpoint
+        run: |
+          curl -X POST http://127.0.0.1:5000/chat \
+          -H "Content-Type: application/json" \
+          -d '{"message":"Want to change my order?"}'
+
+      - name: Build Docker image
+        run: |
+          docker build -t ai-customer-support-agent .

@@ -1,0 +1,4 @@
+2026-05-11T23:16:16.951028Z | model=intent_model.joblib | dataset=data/customer_support.csv | rows=26872 | intents=27 | accuracy=0.9784
+2026-05-11T23:33:38.177545Z | model=intent_model.joblib | dataset=data/customer_support.csv | rows=26872 | intents=27 | accuracy=0.9788
+2026-05-11T23:54:14.697251Z | model=intent_model.joblib | dataset=data/customer_support.csv | rows=26872 | intents=27 | accuracy=0.9788
+2026-05-12T00:16:38.007498Z | model=intent_model.joblib | dataset=data/cleaned_customer_support_dataset.csv | rows=26872 | intents=27 | accuracy=0.9788

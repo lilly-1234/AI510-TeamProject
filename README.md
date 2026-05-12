@@ -1,214 +1,287 @@
 # AI Customer Support Agent for E-Commerce using Intent Classification and MLOps
 
-This project builds an AI customer support chatbot for e-commerce. It classifies customer messages into intents such as order tracking, refunds, delivery, payment issues, account support, and human-agent contact. After predicting the intent, the system returns a suitable support response.
+## Project Overview
 
-## Project Features
+This project presents an AI-based customer support agent for e-commerce platforms using Natural Language Processing (NLP) and Machine Learning. The chatbot automatically understands customer queries such as order tracking, refund requests, shipping information, payment issues, and account support using intent classification.
 
-- Intent classification using TF-IDF and Logistic Regression
-- Flask REST API with `/chat` endpoint
-- Simple HTML chatbot UI
-- Model metrics and local model registry log
+The system is built using:
+- Python
+- Flask API
+- Scikit-learn
+- TF-IDF Vectorization
+- Logistic Regression
+- MLOps concepts
+
+
+# Features
+
+- AI-based intent classification
+- Customer support automation
+- REST API using Flask
+- Data preprocessing pipeline
+- TF-IDF + Logistic Regression model
+- Confidence-based predictions
+- Metrics tracking
+- Model registry logging
 - Docker support
-- GitHub Actions CI pipeline
-- Unit tests using pytest
 
-## Project Structure
+# Project Structure
 
 ```text
-ai_customer_support_agent/
+AI510-TeamProject/
+│
+├── .github/workflows/
 ├── app/
 │   ├── app.py
-│   ├── chatbot.py
-│   └── ui.html
+│   └── chatbot.py
+│
 ├── data/
-│   └── sample_customer_support.csv
+│   ├── customer_support_dataset.csv
+│   └── cleaned_customer_support_dataset.csv
+│
+├── preprocessing/
+│   └── data_cleaning.py
+│
 ├── models/
 │   ├── intent_model.joblib
 │   ├── response_map.json
 │   ├── metrics.json
 │   └── model_registry.log
+│
 ├── tests/
 │   └── test_api.py
-├── .github/workflows/
-│   └── ci.yml
+│
 ├── Dockerfile
-├── README.md
 ├── requirements.txt
-└── train_model.py
+├── train_model.py
+├── README.md
+└── .gitignore
+```
+# Dataset
+
+Dataset Used:
+
+Bitext Gen AI Customer Support Dataset
+
+Dataset Link:
+
+https://www.kaggle.com/datasets/bitext/bitext-gen-ai-chatbot-customer-support-dataset
+
+---
+
+# Technologies Used
+
+| Technology | Purpose |
+|---|---|
+| Python | Backend development |
+| Flask | REST API |
+| Scikit-learn | Machine learning |
+| Pandas | Data preprocessing |
+| TF-IDF | Text vectorization |
+| Logistic Regression | Intent classification |
+| Joblib | Model saving/loading |
+| Docker | Containerization |
+| GitHub | Version control |
+
+---
+
+# Installation
+
+## Clone Repository
+
+```bash
+git clone <your-repository-url>
+cd AI510-TeamProject
 ```
 
-## Dataset
+---
 
-Recommended dataset: Bitext Gen AI Customer Support Dataset from Kaggle.
+# Create Virtual Environment
 
-Expected CSV columns:
-
-```text
-instruction,intent,response
-```
-
-Place the downloaded dataset here:
-
-```text
-data/customer_support.csv
-```
-
-A small sample dataset is already included for quick testing.
-
-## Step 1: Create Virtual Environment
-
-### Windows PowerShell
+## Windows
 
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-### macOS/Linux
+## Linux / Mac
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-## Step 2: Install Requirements
+---
+
+# Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Step 3: Train the Model
+---
 
-Using sample data:
+# Data Preprocessing
 
-```bash
-python train_model.py --data data/sample_customer_support.csv
-```
-
-Using Kaggle dataset:
+Run preprocessing script:
 
 ```bash
-python train_model.py --data data/customer_support.csv
+python preprocessing/data_cleaning.py
 ```
 
-After training, these files are created in the `models` folder:
+This step:
+- removes missing values
+- removes duplicate rows
+- converts text to lowercase
+- removes placeholders like {{Order Number}}
+- saves cleaned dataset
+
+Output:
 
 ```text
-intent_model.joblib
-response_map.json
-metrics.json
-model_registry.log
+data/cleaned_customer_support_dataset.csv
 ```
 
-## Step 4: Run Flask API
+---
+
+# Model Training
+
+Train the intent classification model:
+
+```bash
+python train_model.py --data data/cleaned_customer_support_dataset.csv
+```
+
+This step:
+- trains the NLP model
+- creates TF-IDF features
+- performs intent classification
+- saves trained model
+- saves metrics
+- creates model registry logs
+
+Generated Files:
+
+```text
+models/intent_model.joblib
+models/response_map.json
+models/metrics.json
+models/model_registry.log
+```
+
+---
+
+# Run Flask API
+
+Start the chatbot API:
 
 ```bash
 python app/app.py
 ```
 
-Open:
+Server runs on:
 
 ```text
-http://127.0.0.1:5000/
+http://127.0.0.1:5000
 ```
 
-## Step 5: Test the Chat API
+---
 
-### Windows PowerShell
+# API Endpoints
 
-```bash
-curl.exe -X POST http://127.0.0.1:5000/chat -H "Content-Type: application/json" -d "{\"message\":\"Where is my order?\"}"
+## Health Check
+
+```http
+GET /
 ```
 
-### macOS/Linux/Git Bash
+Response:
+
+```json
+{
+  "message": "AI Customer Support Agent API is running"
+}
+```
+
+---
+
+## Chat Endpoint
+
+```http
+POST /chat
+```
+
+Example Request:
 
 ```bash
 curl -X POST http://127.0.0.1:5000/chat \
-  -H "Content-Type: application/json" \
-  -d '{"message":"Where is my order?"}'
+-H "Content-Type: application/json" \
+-d '{"message":"I want to change my order."}'
 ```
 
-Expected output:
+Example Response:
 
 ```json
 {
   "intent": "track_order",
-  "confidence": 0.65,
-  "response": "Please provide your order number so I can help track your order.",
-  "timestamp": "2026-05-11T00:00:00Z"
+  "confidence": 0.54,
+  "response": "You can modify your order before it is shipped. Please provide your order number.",
+  "timestamp": "2026-05-12T00:00:00Z"
 }
 ```
 
-## Step 6: Run Simple UI
+---
 
-Open this file in the browser:
+# Example Test Messages
 
 ```text
-app/ui.html
+I want to change my order.
+Cancel my order.
+I want a refund.
+My payment failed.
+What are the shipping charges?
+My package is delayed.
+I cannot access my account.
+I need customer support.
 ```
 
-Make sure Flask is already running before using the UI.
+---
 
-## Step 7: Run Tests
+# Docker Support
 
-```bash
-pytest -q
-```
-
-## Step 8: Run with Docker
-
-Build image:
+Build Docker Image:
 
 ```bash
 docker build -t ai-customer-support-agent .
 ```
 
-Run container:
+Run Docker Container:
 
 ```bash
 docker run -p 5000:5000 ai-customer-support-agent
 ```
 
-Test:
+---
 
-```bash
-curl -X POST http://127.0.0.1:5000/chat \
-  -H "Content-Type: application/json" \
-  -d '{"message":"I need a refund"}'
-```
+# MLOps Features
 
-## Sample Test Prompts
+This project includes:
+- Data preprocessing pipeline
+- Model training workflow
+- Metrics logging
+- Model registry tracking
+- Deployment-ready API
+- Docker containerization
+- GitHub workflow support
 
-Use these prompts to test different scenarios:
+# Future Improvements
 
-```text
-Where is my order?
-I want to cancel my order.
-How do I get a refund?
-My payment failed.
-What payment methods do you accept?
-How long does delivery take?
-I forgot my password.
-I want to talk to a human agent.
-I need to change my shipping address.
-```
+- Deep Learning-based intent classification
+- Cloud deployment using AWS
+- Real-time chatbot UI
+- Database integration
+- Multi-language support
+- Dynamic response generation using LLMs
 
-## MLOps Part
 
-This project includes basic MLOps practices:
-
-- `model_registry.log` stores model name, dataset, timestamp, rows, intents, and accuracy.
-- `metrics.json` stores model evaluation results.
-- `Dockerfile` containerizes the application.
-- `ci.yml` trains the model and runs tests automatically in GitHub Actions.
-
-## Git Commands
-
-```bash
-git init
-git add .
-git commit -m "Initial AI customer support agent project"
-git branch -M main
-git remote add origin YOUR_GITHUB_REPO_URL
-git push -u origin main
-```
