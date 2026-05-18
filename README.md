@@ -144,6 +144,8 @@ http://127.0.0.1:5000
 
 ---
 
+python train_model.py --data data/cleaned_customer_support_dataset.csv
+
 # API Endpoints
 
 ## Health Check
@@ -193,15 +195,11 @@ Example Response:
 
 ```text
 I want to change my order.
-Cancel my order.
-I want a refund.
+need my refund.
 My payment failed.
-What are the shipping charges?
-My package is delayed.
-I cannot access my account.
-I need customer support.
-```
+want to track my order
 
+```
 ---
 
 # Docker Support
